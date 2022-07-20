@@ -96,7 +96,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                   weekStartsMonday: false,
                   initialDate: getCurrentTimestamp,
                   onChange: (DateTimeRange newSelectedDate) {
-                    setState(() => calendarSelectedDay = newSelectedDate);
+                    setState(
+                      () => calendarSelectedDay = newSelectedDate
+                    );
                   },
                   titleStyle: FlutterFlowTheme.of(context).bodyText1,
                   dayOfWeekStyle: FlutterFlowTheme.of(context).bodyText1,
@@ -119,12 +121,6 @@ class _CalendarWidgetState extends State<CalendarWidget> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  // controller.addAppointment(
-                  // AppoinmentDate(
-                  //  date: calendarSelectedDay.start.toString(),
-                  //),
-                  //);
-                  print(calendarSelectedDay.end.day);
                   _showDatePicker(context);
                 },
                 child: Text('Book Appointment'),
@@ -174,6 +170,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                           scaffoldKey.currentState.showSnackBar(
                             SnackBar(
                               content: Text('Appointment Added'),
+                              backgroundColor: Colors.green,
                               duration: Duration(seconds: 2),
                             ),
                           ),

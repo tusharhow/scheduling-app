@@ -1,6 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+
+import '../calendar/calendar_widget.dart';
 
 class PhoneLogin extends StatefulWidget {
   PhoneLogin({Key key}) : super(key: key);
@@ -15,7 +19,7 @@ class _PhoneLoginState extends State<PhoneLogin> {
   bool otpVisibility = false;
   String verificationID = "";
   FirebaseAuth auth = FirebaseAuth.instance;
-
+  DateTime _chosenDateTime;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,5 +109,6 @@ class _PhoneLoginState extends State<PhoneLogin> {
           textColor: Colors.white,
           fontSize: 16.0);
     });
+    Get.offAll(() => CalendarWidget());
   }
 }
