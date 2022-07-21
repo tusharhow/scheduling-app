@@ -25,7 +25,7 @@ class ScheduleController extends GetxController {
 // add new appointment date to the database
   Future<void> addAppointment(AppoinmentDate appointment) async {
     final response = _firestore.collection('appointments').add({
-      'id': '',
+      "status": "pending",
       'year': appointment.year,
       'month': appointment.month,
       'day': appointment.day,
@@ -40,8 +40,31 @@ class ScheduleController extends GetxController {
     }
   }
 
+  // my booked appointments
+  Future<List<AppoinmentDate>> getMyAppointments() async {
+    final userId = Get.find<String>();
+    final appointments = await _firestore
+        .collection('appointments')
+        .where('userId', isEqualTo: userId)
+        .get();
+    final appointmentsList = appointments.docs.map((doc) {
+      return AppoinmentDate.fromJson(doc.data());
+    }).toList();
+    return appointmentsList;
+  }
+
+// show all appointments
+  Future<List<AppoinmentDate>> getAllAppointments() async {
+    final appointments = await _firestore.collection('appointments').get();
+    final appointmentsList = appointments.docs.map((doc) {
+      return AppoinmentDate.fromJson(doc.data());
+    }).toList();
+    return appointmentsList;
+  }
+
   @override
   void onInit() {
+    getAllAppointments();
     super.onInit();
   }
 }
