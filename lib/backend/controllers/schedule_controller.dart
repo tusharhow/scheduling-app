@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../models/appoinment.dart';
-import '../../models/notification.dart';
 
 class ScheduleController extends GetxController {
   final _firestore = FirebaseFirestore.instance;
+  final _auth = FirebaseAuth.instance;
 
   Future<void> addAppointment(AppoinmentDate appointment) async {
     final response = _firestore.collection('appointments').add({
@@ -24,25 +24,13 @@ class ScheduleController extends GetxController {
     }
   }
 
-  // my booked appointments
-  Future<List<AppoinmentDate>> getMyAppointments() async {
-    final userId = Get.find<String>();
-    final appointments = await _firestore
-        .collection('appointments')
-        .where('userId', isEqualTo: userId)
-        .get();
-    final appointmentsList = appointments.docs.map((doc) {
-      return AppoinmentDate.fromJson(doc.data());
-    }).toList();
-    return appointmentsList;
-  }
-
 // show all appointments
   Future<List<AppoinmentDate>> getAllAppointments() async {
     final appointments = await _firestore.collection('appointments').get();
     final appointmentsList = appointments.docs.map((doc) {
       return AppoinmentDate.fromJson(doc.data());
     }).toList();
+    update();
     return appointmentsList;
   }
 

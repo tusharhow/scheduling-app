@@ -12,7 +12,7 @@ void main() async {
 
   await FlutterFlowTheme.initialize();
   await Firebase.initializeApp();
-  // await Dic.setUp();
+ await Dic.setUp();
   runApp(MyApp());
 }
 

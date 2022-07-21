@@ -7,7 +7,9 @@ import 'package:get/get.dart';
 import '../calendar/calendar_widget.dart';
 
 class PhoneLogin extends StatefulWidget {
-  PhoneLogin({Key key}) : super(key: key);
+  PhoneLogin({
+    Key key,
+  }) : super(key: key);
 
   @override
   State<PhoneLogin> createState() => _PhoneLoginState();
@@ -31,13 +33,19 @@ class _PhoneLoginState extends State<PhoneLogin> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
+            TextFormField(
               controller: phoneController,
               decoration: InputDecoration(
-                labelText: 'Phone Number',
+                labelText: 'Enter Phone Number',
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.phone,
+              validator: (val) {
+                if (val.isEmpty) {
+                  return 'Phone Number is required';
+                }
+                return null;
+              },
             ),
             SizedBox(
               height: 20,
@@ -58,12 +66,20 @@ class _PhoneLoginState extends State<PhoneLogin> {
             ),
             ElevatedButton(
               onPressed: () {
-                if (otpVisibility) {
-                  //ToDo: signIn
-                  signIn();
+                if (phoneController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Phone Number is required'),
+                    ),
+                  );
                 } else {
-                  //Todo: verify
-                  verifyPhone();
+                  if (otpVisibility) {
+                    //ToDo: signIn
+                    signIn();
+                  } else {
+                    //Todo: verify
+                    verifyPhone();
+                  }
                 }
               },
               child: Text(otpVisibility ? "Verify" : "Send OTP"),
@@ -84,7 +100,11 @@ class _PhoneLoginState extends State<PhoneLogin> {
         });
       },
       verificationFailed: (FirebaseAuthException e) {
-        print(e.message);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(e.message),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 2),
+        ));
       },
       codeSent: (String verificationId, int resendToken) {
         otpVisibility = true;
@@ -109,6 +129,10 @@ class _PhoneLoginState extends State<PhoneLogin> {
           textColor: Colors.white,
           fontSize: 16.0);
     });
-    Get.offAll(() => CalendarWidget());
+    Get.offAll(() => CalendarWidget(
+          title: "Book a Session",
+          desc: "Please enter your phone number to book a session",
+          time: "30m",
+        ));
   }
 }

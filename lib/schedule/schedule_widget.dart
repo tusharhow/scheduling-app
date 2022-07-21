@@ -1,3 +1,5 @@
+import 'package:scheduling_app/schedule/otp_screen.dart';
+
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
@@ -186,18 +188,11 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                                           children: [
                                             FFButtonWidget(
                                               onPressed: () async {
-                                                context.pushNamed(
-                                                  'Calendar',
-                                                  extra: <String, dynamic>{
-                                                    kTransitionInfoKey:
-                                                        TransitionInfo(
-                                                      hasTransition: true,
-                                                      transitionType:
-                                                          PageTransitionType
-                                                              .leftToRight,
-                                                    ),
-                                                  },
-                                                );
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            PhoneLogin()));
                                               },
                                               text: FFLocalizations.of(context)
                                                   .getText(

@@ -11,8 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CalendarWidget extends StatefulWidget {
-  const CalendarWidget({Key key}) : super(key: key);
-
+  CalendarWidget({Key key, this.desc, this.time, this.title}) : super(key: key);
+  String title;
+  String desc;
+  String time;
   @override
   _CalendarWidgetState createState() => _CalendarWidgetState();
 }
@@ -88,42 +90,44 @@ class _CalendarWidgetState extends State<CalendarWidget> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              Align(
-                alignment: AlignmentDirectional(0, 0),
-                child: FlutterFlowCalendar(
-                  color: FlutterFlowTheme.of(context).primaryColor,
-                  weekFormat: false,
-                  weekStartsMonday: false,
-                  initialDate: getCurrentTimestamp,
-                  onChange: (DateTimeRange newSelectedDate) {
-                    setState(
-                      () => calendarSelectedDay = newSelectedDate
-                    );
-                  },
-                  titleStyle: FlutterFlowTheme.of(context).bodyText1,
-                  dayOfWeekStyle: FlutterFlowTheme.of(context).bodyText1,
-                  dateStyle: FlutterFlowTheme.of(context).subtitle1.override(
-                        fontFamily: 'Poppins',
-                        fontSize: 14,
-                      ),
-                  selectedDateStyle: FlutterFlowTheme.of(context).subtitle1,
-                  inactiveDateStyle:
-                      FlutterFlowTheme.of(context).subtitle2.override(
-                            fontFamily: 'Poppins',
-                            fontSize: 12,
-                            fontWeight: FontWeight.normal,
-                          ),
-                  locale: FFLocalizations.of(context).languageCode,
-                ),
-              ),
+              // Align(
+              //   alignment: AlignmentDirectional(0, 0),
+              //   child: FlutterFlowCalendar(
+              //     color: FlutterFlowTheme.of(context).primaryColor,
+              //     weekFormat: false,
+              //     weekStartsMonday: false,
+              //     initialDate: getCurrentTimestamp,
+              //     onChange: (DateTimeRange newSelectedDate) {
+              //       setState(
+              //         () => calendarSelectedDay = newSelectedDate
+              //       );
+              //     },
+              //     titleStyle: FlutterFlowTheme.of(context).bodyText1,
+              //     dayOfWeekStyle: FlutterFlowTheme.of(context).bodyText1,
+              //     dateStyle: FlutterFlowTheme.of(context).subtitle1.override(
+              //           fontFamily: 'Poppins',
+              //           fontSize: 14,
+              //         ),
+              //     selectedDateStyle: FlutterFlowTheme.of(context).subtitle1,
+              //     inactiveDateStyle:
+              //         FlutterFlowTheme.of(context).subtitle2.override(
+              //               fontFamily: 'Poppins',
+              //               fontSize: 12,
+              //               fontWeight: FontWeight.normal,
+              //             ),
+              //     locale: FFLocalizations.of(context).languageCode,
+              //   ),
+              // ),
               SizedBox(
-                height: 30,
+                height: 300,
               ),
-              ElevatedButton(
-                onPressed: () {
-                  _showDatePicker(context);
-                },
-                child: Text('Book Appointment'),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    _showDatePicker(context);
+                  },
+                  child: Text('Book Appointment'),
+                ),
               ),
             ],
           ),
