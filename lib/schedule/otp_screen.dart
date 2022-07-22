@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -21,7 +20,7 @@ class _PhoneLoginState extends State<PhoneLogin> {
   bool otpVisibility = false;
   String verificationID = "";
   FirebaseAuth auth = FirebaseAuth.instance;
-  DateTime _chosenDateTime;
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(

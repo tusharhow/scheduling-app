@@ -43,9 +43,6 @@ class _CalendarWidgetState extends State<CalendarWidget> {
 
   init() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    //convert date to datetimerange
-
     setState(() {
       date = prefs.getString('date');
       month = prefs.getString('month');

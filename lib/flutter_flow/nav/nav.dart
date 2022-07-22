@@ -4,10 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:scheduling_app/schedule/otp_screen.dart';
-import '../flutter_flow_theme.dart';
-
 import '../../index.dart';
-import '../../main.dart';
 import 'serialization_util.dart';
 
 export 'package:go_router/go_router.dart';
@@ -33,7 +30,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: '_initialize',
           path: '/',
-          builder: (context, _) => CalendarWidget(),
+          builder: (context, _) => WelcomeWidget(),
           routes: [
             FFRoute(
               name: 'Welcome',
