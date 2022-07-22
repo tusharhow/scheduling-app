@@ -38,6 +38,7 @@ class _PhoneLoginState extends State<PhoneLogin> {
               decoration: InputDecoration(
                 labelText: 'Enter Phone Number',
                 border: OutlineInputBorder(),
+                hintText: '+9191555442',
               ),
               keyboardType: TextInputType.phone,
               validator: (val) {
@@ -98,6 +99,11 @@ class _PhoneLoginState extends State<PhoneLogin> {
         await auth.signInWithCredential(credential).then((value) {
           print("You are logged in successfully");
         });
+        Get.offAll(() => CalendarWidget(
+              title: "Book a Session",
+              desc: "Please enter your phone number to book a session",
+              time: "30m",
+            ));
       },
       verificationFailed: (FirebaseAuthException e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -129,10 +135,18 @@ class _PhoneLoginState extends State<PhoneLogin> {
           textColor: Colors.white,
           fontSize: 16.0);
     });
-    Get.offAll(() => CalendarWidget(
-          title: "Book a Session",
-          desc: "Please enter your phone number to book a session",
-          time: "30m",
-        ));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => CalendarWidget(
+                  title: "Book a Session",
+                  desc: "Please enter your phone number to book a session",
+                  time: "30m",
+                )));
+    // Get.offAll(() => CalendarWidget(
+    //       title: "Book a Session",
+    //       desc: "Please enter your phone number to book a session",
+    //       time: "30m",
+    //     ));
   }
 }

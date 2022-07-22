@@ -1,4 +1,5 @@
 import 'package:scheduling_app/schedule/otp_screen.dart';
+import 'package:scheduling_app/sessions/all_session.dart';
 
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -52,12 +53,14 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
             borderWidth: 1,
             buttonSize: 60,
             icon: Icon(
-              Icons.chevron_left,
+              Icons.info,
               color: FlutterFlowTheme.of(context).secondaryColor,
               size: 30,
             ),
             onPressed: () async {
-              context.pushNamed('Sessions');
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return AllSessions();
+              }));
             },
           ),
         ],
