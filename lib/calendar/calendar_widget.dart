@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:scheduling_app/backend/controllers/schedule_controller.dart';
 import 'package:scheduling_app/models/appoinment.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 import '../flutter_flow/flutter_flow_calendar.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
@@ -24,6 +26,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final controller = Get.put(ScheduleController());
   DateTime _chosenDateTime;
+
   @override
   void initState() {
     super.initState();
@@ -31,6 +34,26 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       start: DateTime.now().startOfDay,
       end: DateTime.now().endOfDay,
     );
+    init();
+  }
+
+  String date;
+  String month;
+  String year;
+
+  init() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    //convert date to datetimerange
+
+    setState(() {
+      date = prefs.getString('date');
+      month = prefs.getString('month');
+      year = prefs.getString('year');
+    });
+    print("date: $date");
+    print("month: $month");
+    print("year: $year");
   }
 
   @override
@@ -90,45 +113,49 @@ class _CalendarWidgetState extends State<CalendarWidget> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              // Align(
-              //   alignment: AlignmentDirectional(0, 0),
-              //   child: FlutterFlowCalendar(
-              //     color: FlutterFlowTheme.of(context).primaryColor,
-              //     weekFormat: false,
-              //     weekStartsMonday: false,
-              //     initialDate: getCurrentTimestamp,
-              //     onChange: (DateTimeRange newSelectedDate) {
-              //       setState(
-              //         () => calendarSelectedDay = newSelectedDate
-              //       );
-              //     },
-              //     titleStyle: FlutterFlowTheme.of(context).bodyText1,
-              //     dayOfWeekStyle: FlutterFlowTheme.of(context).bodyText1,
-              //     dateStyle: FlutterFlowTheme.of(context).subtitle1.override(
-              //           fontFamily: 'Poppins',
-              //           fontSize: 14,
-              //         ),
-              //     selectedDateStyle: FlutterFlowTheme.of(context).subtitle1,
-              //     inactiveDateStyle:
-              //         FlutterFlowTheme.of(context).subtitle2.override(
-              //               fontFamily: 'Poppins',
-              //               fontSize: 12,
-              //               fontWeight: FontWeight.normal,
-              //             ),
-              //     locale: FFLocalizations.of(context).languageCode,
-              //   ),
-              // ),
               SizedBox(
-                height: 300,
+                height: 30,
               ),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    _showDatePicker(context);
-                  },
-                  child: Text('Book Appointment'),
+              if (date != null)
+                Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Row(
+                    children: [
+                      Container(
+                        child: Text(
+                            'You have an appointment on\n$date-$month-$year',
+                            style: GoogleFonts.poppins(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            )),
+                      ),
+                    ],
+                  ),
                 ),
+              SizedBox(
+                height: 20,
               ),
+              TableCalendar(
+                firstDay: DateTime.utc(2010, 10, 16),
+                lastDay: DateTime.utc(2050, 3, 14),
+                focusedDay: DateTime.now(),
+                currentDay: date == null
+                    ? DateTime.now()
+                    : DateTime.utc(
+                        int.parse(year), int.parse(month), int.parse(date)),
+              ),
+              if (date == null)
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _showDatePicker(context);
+                      });
+                    },
+                    child: Text('Book Appointment'),
+                  ),
+                ),
             ],
           ),
         ),
@@ -137,54 +164,65 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   }
 
   void _showDatePicker(ctx) {
-    showCupertinoModalPopup(
-      context: ctx,
-      builder: (_) => Container(
-        height: 450,
-        color: Colors.white,
-        child: Column(
-          children: [
-            Container(
-              height: 350,
-              child: CupertinoDatePicker(
-                  initialDateTime: DateTime.now(),
-                  dateOrder: DatePickerDateOrder.dmy,
-                  onDateTimeChanged: (DateTime val) {
-                    setState(() {
-                      _chosenDateTime = val;
-                      print(_chosenDateTime);
-                    });
-                  }),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                controller
-                    .addAppointment(
-                      AppoinmentDate(
-                        month: _chosenDateTime.month.toString(),
-                        year: _chosenDateTime.year.toString(),
-                        day: _chosenDateTime.day.toString(),
-                        hour: _chosenDateTime.hour.toString(),
-                        minute: _chosenDateTime.minute.toString(),
-                        second: _chosenDateTime.second.toString(),
-                      ),
-                    )
-                    .then((value) => {
-                          Navigator.of(ctx).pop(),
-                          scaffoldKey.currentState.showSnackBar(
-                            SnackBar(
-                              content: Text('Appointment Added'),
-                              backgroundColor: Colors.green,
-                              duration: Duration(seconds: 2),
-                            ),
+    setState(() {
+      showCupertinoModalPopup(
+        context: ctx,
+        builder: (_) => Container(
+          height: 450,
+          color: Colors.white,
+          child: Column(
+            children: [
+              Container(
+                height: 350,
+                child: CupertinoDatePicker(
+                    initialDateTime: DateTime.now(),
+                    dateOrder: DatePickerDateOrder.dmy,
+                    onDateTimeChanged: (DateTime val) async {
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+
+                      setState(() {
+                        _chosenDateTime = val;
+                        prefs.setString('date', _chosenDateTime.day.toString());
+                        prefs.setString(
+                            'month', _chosenDateTime.month.toString());
+                        prefs.setString(
+                            'year', _chosenDateTime.year.toString());
+                      });
+                    }),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    controller
+                        .addAppointment(
+                          AppoinmentDate(
+                            month: _chosenDateTime.month.toString(),
+                            year: _chosenDateTime.year.toString(),
+                            day: _chosenDateTime.day.toString(),
+                            hour: _chosenDateTime.hour.toString(),
+                            minute: _chosenDateTime.minute.toString(),
+                            second: _chosenDateTime.second.toString(),
                           ),
-                        });
-              },
-              child: Text('Book Appointment'),
-            ),
-          ],
+                        )
+                        .then((value) => {
+                              Navigator.of(ctx).pop(),
+                              scaffoldKey.currentState.showSnackBar(
+                                SnackBar(
+                                  content: Text('Appointment Added'),
+                                  backgroundColor: Colors.green,
+                                  duration: Duration(seconds: 2),
+                                ),
+                              ),
+                            });
+                  });
+                },
+                child: Text('Book Appointment'),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

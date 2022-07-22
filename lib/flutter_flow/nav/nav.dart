@@ -33,7 +33,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: '_initialize',
           path: '/',
-          builder: (context, _) => WelcomeWidget(),
+          builder: (context, _) => CalendarWidget(),
           routes: [
             FFRoute(
               name: 'Welcome',
